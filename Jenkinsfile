@@ -1,23 +1,12 @@
-//run maven test in docker if pass deploy
-node {
-    stage('Build') {
-        docker.image('maven:3.5.2-jdk-8-alpine').inside {
-            sh 'ls'
-            sh 'mvn test'
-        }
-    }
-    stage('Deploy') {
-        input 'Deploy?'
-        docker.image('maven:3.5.2-jdk-8-alpine').inside {
-            sh 'mvn deploy'
-        }
-    }
-}
-/*
-
-
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.6.3-jdk-11'
+            args '-u root:root'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+            args '-w /app'
+        }
+    }
     options {
         skipStagesAfterUnstable()
     }
@@ -25,8 +14,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing'
-                docker build -dockerfile Dockerfile-test -t test .
-                docker run test
+                sh 'mvn test'
             }
         }
         stage('Build') {
