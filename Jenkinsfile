@@ -1,3 +1,21 @@
+//run maven test in docker if pass deploy
+node {
+    stage('Build') {
+        docker.image('maven:3.5.2-jdk-8-alpine').inside {
+            sh 'cd demo'
+            sh 'mvn clean install'
+        }
+    }
+    stage('Deploy') {
+        input 'Deploy?'
+        docker.image('maven:3.5.2-jdk-8-alpine').inside {
+            sh 'mvn deploy'
+        }
+    }
+}
+/*
+
+
 pipeline {
     agent any
     options {
@@ -30,4 +48,4 @@ pipeline {
             }
         }
     }
-}
+}*/
