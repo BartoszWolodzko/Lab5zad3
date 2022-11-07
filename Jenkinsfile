@@ -7,6 +7,7 @@ pipeline {
     stage('Test') {
                 steps {
                     echo 'Testing'
+                    ls -la
                     mvn 'test'
                 }
             }
