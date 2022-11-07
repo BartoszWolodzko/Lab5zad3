@@ -7,8 +7,7 @@ pipeline {
     stage('Test') {
                 steps {
                     echo 'Testing'
-                    sh 'cd demo'
-                    sh 'mvn test'
+                    docker build -dockerfile Dockerfile-test -t test .
                 }
             }
         stage('Build') {
