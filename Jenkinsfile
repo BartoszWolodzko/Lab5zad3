@@ -4,12 +4,13 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
-    stage('Test') {
-                steps {
-                    echo 'Testing'
-                    docker build -dockerfile Dockerfile-test -t test .
-                }
+        stage('Test') {
+            steps {
+                echo 'Testing'
+                docker build -dockerfile Dockerfile-test -t test .
+                docker run test
             }
+        }
         stage('Build') {
             steps {
                 echo 'Building'
