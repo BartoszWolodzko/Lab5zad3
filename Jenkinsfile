@@ -32,17 +32,11 @@ pipeline {
             steps{
                 echo 'Deploying to docker hub'
                 script {
-                withCredentials([usernamePassword(credentialsId: 'docker-login-pwd', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh "docker login -u $USERNAME -p $PASSWORD"
-                    sh "docker build -t $registry ."
-                    sh "docker push $registry"
-                }
-                    //docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) {
-                      //  docker.image("${registry}:latest").push()
-                    //}
-                    //sh 'docker image build -t $registry:$BUILD_NUMBER .'
-                    //sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
-                    //sh 'docker image push $registry:$BUILD_NUMBER'
+                    docker.withRegistry( 'https://hub.docker.com/', DOCKERHUB_CREDENTIALS ) {
+
+                        docker.image("${registry}:latest").push()
+                    }
+
                 }
             }
         }
