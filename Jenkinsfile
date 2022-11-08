@@ -51,8 +51,9 @@ pipeline {
             steps{
                 echo 'Deploying to docker hub'
                 script {
-                    docker.withRegistry( 'https://hub.docker.com/', DOCKERHUB_CREDENTIALS ) {
-                        dockerImage.push()
+                    docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) {
+                        def app = docker.build(registry)
+                        app.push()
                     }
                 }
             }
