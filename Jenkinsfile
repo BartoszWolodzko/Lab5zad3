@@ -51,10 +51,10 @@ pipeline {
             steps{
                 echo 'Deploying to docker hub'
                 script {
-                    docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) {
-                        def app = docker.build(registry)
-                        app.push()
-                    }
+                    sh 'docker image build -t $registry:$BUILD_NUMBER .'
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u s23136 --password-stdin'
+                    sh 'docker image push $registry:$BUILD_NUMBER'
+                    sh "docker image rm $registry:$BUILD_NUMBER"
                 }
             }
         }
