@@ -1,7 +1,7 @@
 pipeline {
     environment {
         registry = "s23136/lab5zad3"
-        DOCKERHUB_CREDENTIALS = 'docker-login-pwd'
+        DOCKERHUB_CREDENTIALS = credentials('docker-login-pwd')
         HEROKU_API_KEY = credentials('heroku-api-key')
     }
    agent none
@@ -52,9 +52,7 @@ pipeline {
                 echo 'Deploying to docker hub'
                 script {
                     sh 'docker image build -t $registry:$BUILD_NUMBER .'
-                    withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                        sh 'docker login -u $USERNAME -p $PASSWORD'
-                    }
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u s23136 --password-stdin'
                     sh 'docker image push $registry:$BUILD_NUMBER'
                     sh "docker image rm $registry:$BUILD_NUMBER"
                 }
