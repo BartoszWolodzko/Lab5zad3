@@ -4,27 +4,36 @@ pipeline {
         DOCKERHUB_CREDENTIALS = 'docker-login-pwd'
         HEROKU_API_KEY = credentials('heroku-api-key')
     }
-    agent {
-        docker {
-
-            image 'maven:3.8.6-amazoncorretto-17'
-            args '-u root:root'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-            args '-w /app'
-        }
-    }
-
+   agent none
     options {
         skipStagesAfterUnstable()
     }
     stages {
         stage('Test') {
+            agent {
+                    docker {
+                        image 'maven:3.8.6-amazoncorretto-17'
+                        args '-u root:root'
+                        args '-v /var/run/docker.sock:/var/run/docker.sock'
+                        args '-w /app'
+                    }
+                }
             steps {
+
                 echo 'Testing'
                 sh 'mvn test'
             }
         }
         stage('Build') {
+        agent {
+                docker {
+
+                    image 'maven:3.8.6-amazoncorretto-17'
+                    args '-u root:root'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                    args '-w /app'
+                }
+            }
             steps {
                 echo 'Building'
                 sh 'mvn package'
@@ -49,6 +58,15 @@ pipeline {
             }
         }
         stage('Deploy to heroku') {
+        agent {
+                docker {
+
+                    image 'maven:3.8.6-amazoncorretto-17'
+                    args '-u root:root'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                    args '-w /app'
+                }
+            }
             steps {
                 echo 'Deploying to heroku api key'
                 sh 'HEROKU_API_KEY="$HEROKU_API_KEY" mvn heroku:deploy'
