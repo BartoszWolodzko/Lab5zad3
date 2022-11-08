@@ -1,7 +1,7 @@
 pipeline {
     environment {
         registry = "s23136/lab5zad3"
-        DOCKERHUB_CREDENTIALS = credentials('docker-login-pwd')
+        DOCKERHUB_CREDENTIALS = 'docker-login-pwd'
         HEROKU_API_KEY = credentials('heroku-api-key')
     }
     agent {
