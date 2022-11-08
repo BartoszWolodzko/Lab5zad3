@@ -45,11 +45,13 @@ pipeline {
                     }
 
                 }*/
+                script{
                 docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) {
                                         def customImage = docker.build registry + ":$BUILD_NUMBER"
                                         customImage.push()
                                         customImage.push('latest')
                                     }
+                }
             }
         }
         stage('Deploy to heroku') {
