@@ -6,7 +6,8 @@ pipeline {
     }
     agent {
         docker {
-            image 'maven:3.8.6-amazoncorretto-17'
+            //image 'maven:3.8.6-amazoncorretto-17'
+            image 'test'
             args '-u root:root'
             args '-v /var/run/docker.sock:/var/run/docker.sock'
             args '-w /app'
