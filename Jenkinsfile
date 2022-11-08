@@ -13,7 +13,6 @@ pipeline {
             args '-w /app'
         }
     }
-    agent any
 
     options {
         skipStagesAfterUnstable()
@@ -32,15 +31,16 @@ pipeline {
             }
         }
         stage('Deplot to docker hub'){
+        agent{
+            docker {
+                image 'docker:20.10.8'
+                args '-u root:root'
+                args '-v /var/run/docker.sock:/var/run/docker.sock'
+                args '-w /app'
+            }
+        }
             steps{
                 echo 'Deploying to docker hub'
-                script {
-                    docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) {
-                        def customImage = docker.build registry + ":$BUILD_NUMBER"
-                        customImage.push()
-                        customImage.push('latest')
-                    }
-                }
                 script {
                     docker.withRegistry( 'https://hub.docker.com/', DOCKERHUB_CREDENTIALS ) {
 
