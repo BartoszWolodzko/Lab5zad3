@@ -6,8 +6,7 @@ pipeline {
     }
     agent {
         docker {
-            //image 'maven:3.8.6-amazoncorretto-17'
-            image 'test'
+            image 'maven:3.8.6-amazoncorretto-17'
             args '-u root:root'
             args '-v /var/run/docker.sock:/var/run/docker.sock'
             args '-w /app'
@@ -33,9 +32,12 @@ pipeline {
             steps{
                 echo 'Deploying to docker hub'
                 script {
-                    sh 'docker image build -t $registry:$BUILD_NUMBER .'
-                    sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
-                    sh 'docker image push $registry:$BUILD_NUMBER'
+                    docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) {
+                        docker.image("${registry}:latest").push()
+                    }
+                    //sh 'docker image build -t $registry:$BUILD_NUMBER .'
+                    //sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
+                    //sh 'docker image push $registry:$BUILD_NUMBER'
                 }
             }
         }
