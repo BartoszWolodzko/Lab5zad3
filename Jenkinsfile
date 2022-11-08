@@ -32,7 +32,7 @@ pipeline {
             steps {
                 echo 'Deploying to heroku api key'
                 withCredentials([[$class: 'StringBinding', credentialsId: 'heroku-api-key', variable: 'heroku-api-key']]) {
-                        mvn "heroku:deploy -DskipTests=true -Dmaven.javadoc.skip=true -B -V -D heroku.appName=${herokuApp}"
+                        mvn "heroku:deploy -DskipTests=true -Dmaven.javadoc.skip=true -B -V -D"
                     }
                 //mvn 'heroku:deploy'
                 //sh 'mvn deploy'
