@@ -33,11 +33,11 @@ pipeline {
         stage('Deplot to docker hub'){
         agent{
             docker {
-                image 'docker'
-                args '-u root:root'
-                args '-v /var/run/docker.sock:/var/run/docker.sock'
-                args '-w /app'
-            }
+                                    image 'mmiotkug/node-curl'
+                                    args '-p 3000:3000'
+                                    args '-w /app'
+                                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                                }
         }
             steps{
                 echo 'Deploying to docker hub'
