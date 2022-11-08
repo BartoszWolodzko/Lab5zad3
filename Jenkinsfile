@@ -52,7 +52,9 @@ pipeline {
                 echo 'Deploying to docker hub'
                 script {
                     sh 'docker image build -t $registry:$BUILD_NUMBER .'
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u s23136 --password-stdin'
+                    withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                        sh 'docker login -u $USERNAME -p $PASSWORD'
+                    }
                     sh 'docker image push $registry:$BUILD_NUMBER'
                     sh "docker image rm $registry:$BUILD_NUMBER"
                 }
