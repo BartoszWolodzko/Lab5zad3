@@ -31,9 +31,8 @@ pipeline {
         stage('Deploy to heroku') {
             steps {
                 echo 'Deploying to heroku api key'
-                withCredentials([[$class: 'StringBinding', credentialsId: 'heroku-api-key', variable: 'heroku-api-key']]) {
-                        mvn "heroku:deploy -DskipTests=true -Dmaven.javadoc.skip=true -B -V -D"
-                    }
+                sh 'mvn "heroku:deploy -DskipTests=true -Dmaven.javadoc.skip=true -B -V -D heroku.apiKey=$heroku-api-key"'
+
                 //mvn 'heroku:deploy'
                 //sh 'mvn deploy'
                 //sh 'docker image build -t $registry:$BUILD_NUMBER .'
