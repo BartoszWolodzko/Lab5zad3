@@ -1,4 +1,9 @@
 pipeline {
+    environment {
+        registry = "s23136/lab5zad3"
+        DOCKERHUB_CREDENTIALS = credentials('docker-login-pwd')
+        HEROKU_API_KEY_CREDENTIALS = credentials('heroku-api-key')
+    }
     agent {
         docker {
             image 'maven:3.8.6-amazoncorretto-17'
@@ -20,19 +25,19 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building'
-                mvn 'build'
+                //mvn 'build'
             }
         }
-
-        stage('Deploy to Staging') {
+        stage('Deploy to heroku') {
             steps {
-                echo 'Deploying to Staging'
-
-            }
-        }
-        stage('Deploy to Production') {
-            steps {
-                echo 'Deploying to Production'
+                echo 'Deploying to heroku api key'
+                HEROKU_API_KEY = HEROKU_API_KEY_CREDENTIALS mvn 'heroku:deploy'
+                //mvn 'heroku:deploy'
+                //sh 'mvn deploy'
+                //sh 'docker image build -t $registry:$BUILD_NUMBER .'
+                //sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u s23136 --password-stdin'
+                //sh 'docker image push $registry:$BUILD_NUMBER'
+                //sh "docker image rm $registry:$BUILD_NUMBER"
             }
         }
     }
