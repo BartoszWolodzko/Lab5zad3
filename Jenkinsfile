@@ -1,7 +1,7 @@
 pipeline {
     environment {
         registry = "s23136/lab5zad3"
-        DOCKERHUB_CREDENTIALS = 'docker-login-pwd'
+        DOCKERHUB_CREDENTIALS = credentials('docker-login-pwd')
         HEROKU_API_KEY = credentials('heroku-api-key')
     }
     agent {
@@ -42,10 +42,9 @@ pipeline {
             steps{
                 echo 'Deploying to docker hub'
                 script {
-                    docker.withRegistry( 'https://hub.docker.com/', DOCKERHUB_CREDENTIALS ) {
-
-                        docker.image("${registry}:latest").push()
-                    }
+                    withDockerRegistry([ credentialsId: "DOCKERHUB_CREDENTIALS", url: "" ]) {
+                                    dockerImage.push()
+                                }
                 }
             }
         }
