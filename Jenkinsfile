@@ -9,6 +9,7 @@ pipeline {
             image 'maven:3.8.6-amazoncorretto-17'
             args '-v /root/.m2:/root/.m2'
         }
+
         /*docker {
 
             image 'maven:3.8.6-amazoncorretto-17'
@@ -17,6 +18,7 @@ pipeline {
             args '-w /app'
         }*/
     }
+
     options {
         skipStagesAfterUnstable()
     }
@@ -36,13 +38,18 @@ pipeline {
         stage('Deplot to docker hub'){
             steps{
                 echo 'Deploying to docker hub'
-                script {
+                /*script {
                     docker.withRegistry( 'https://hub.docker.com/', DOCKERHUB_CREDENTIALS ) {
 
                         docker.image("${registry}:latest").push()
                     }
 
-                }
+                }*/
+                docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) {
+                                        def customImage = docker.build registry + ":$BUILD_NUMBER"
+                                        customImage.push()
+                                        customImage.push('latest')
+                                    }
             }
         }
         stage('Deploy to heroku') {
