@@ -6,18 +6,14 @@ pipeline {
     }
     agent {
         docker {
-            image 'maven:3.8.6-amazoncorretto-17'
-            args '-v /root/.m2:/root/.m2'
-        }
-
-        /*docker {
 
             image 'maven:3.8.6-amazoncorretto-17'
             args '-u root:root'
             args '-v /var/run/docker.sock:/var/run/docker.sock'
             args '-w /app'
-        }*/
+        }
     }
+    agent any
 
     options {
         skipStagesAfterUnstable()
@@ -39,15 +35,17 @@ pipeline {
             steps{
                 echo 'Deploying to docker hub'
                 script {
-                    /*docker.withRegistry( 'https://hub.docker.com/', DOCKERHUB_CREDENTIALS ) {
+                    docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) {
+                        def customImage = docker.build registry + ":$BUILD_NUMBER"
+                        customImage.push()
+                        customImage.push('latest')
+                    }
+                }
+                script {
+                    docker.withRegistry( 'https://hub.docker.com/', DOCKERHUB_CREDENTIALS ) {
 
                         docker.image("${registry}:latest").push()
-                    }*/
-                    docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) {
-                                        def customImage = docker.build registry + ":$BUILD_NUMBER"
-                                        customImage.push()
-                                        customImage.push('latest')
-                                    }
+                    }
                 }
             }
         }
