@@ -25,14 +25,24 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building'
-                //mvn 'build'
+                sh 'mvn package'
+            }
+        }
+        stage('Deplot to docker hub'){
+            steps{
+                echo 'Deploying to docker hub'
+                script {
+                    docker image build -t $registry:$BUILD_NUMBER .
+                    docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW
+                    docker image push $registry:$BUILD_NUMBER
+                }
             }
         }
         stage('Deploy to heroku') {
             steps {
                 echo 'Deploying to heroku api key'
                 sh 'HEROKU_API_KEY="$HEROKU_API_KEY" mvn heroku:deploy'
-                
+
 
                 //mvn 'heroku:deploy'
                 //sh 'mvn deploy'
