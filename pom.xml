@@ -56,7 +56,7 @@
 				<configuration>
 					<appName>lab5zad3</appName>
 					<processTypes>
-						<web>java $JAVA_OPTS -cp target/classes:target/dependency/* DemoApplication</web>
+						<web>java $JAVA_OPTS -cp target/classes:target/dependency/* com.example.demo.DemoApplication -Dserver.port=$PORT</web>
 					</processTypes>
 				</configuration>
 			</plugin>

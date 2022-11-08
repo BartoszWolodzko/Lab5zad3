@@ -2,7 +2,7 @@ pipeline {
     environment {
         registry = "s23136/lab5zad3"
         DOCKERHUB_CREDENTIALS = credentials('docker-login-pwd')
-        HEROKU_API_KEY_CREDENTIALS = credentials('heroku-api-key')
+        HEROKU_API_KEY = credentials('heroku-api-key')
     }
     agent {
         docker {
@@ -31,7 +31,9 @@ pipeline {
         stage('Deploy to heroku') {
             steps {
                 echo 'Deploying to heroku api key'
-                HEROKU_API_KEY = HEROKU_API_KEY_CREDENTIALS mvn 'heroku:deploy'
+                withCredentials([[$class: 'StringBinding', credentialsId: 'HEROKU_API_KEY', variable: 'HEROKU_API_KEY']]) {
+                        mvn "heroku:deploy -DskipTests=true -Dmaven.javadoc.skip=true -B -V -D heroku.appName=${herokuApp}"
+                    }
                 //mvn 'heroku:deploy'
                 //sh 'mvn deploy'
                 //sh 'docker image build -t $registry:$BUILD_NUMBER .'
