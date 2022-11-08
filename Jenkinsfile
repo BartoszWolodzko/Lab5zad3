@@ -32,9 +32,9 @@ pipeline {
             steps{
                 echo 'Deploying to docker hub'
                 script {
-                    docker image build -t $registry:$BUILD_NUMBER .
-                    docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW
-                    docker image push $registry:$BUILD_NUMBER
+                    sh 'docker image build -t $registry:$BUILD_NUMBER .'
+                    sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
+                    sh 'docker image push $registry:$BUILD_NUMBER'
                 }
             }
         }
