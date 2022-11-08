@@ -31,7 +31,8 @@ pipeline {
         stage('Deploy to heroku') {
             steps {
                 echo 'Deploying to heroku api key'
-                sh 'mvn "heroku:deploy -DskipTests=true -Dmaven.javadoc.skip=true -B -V -D heroku.apiKey=$heroku-api-key"'
+                sh 'HEROKU_API_KEY="$HEROKU_API_KEY" mvn heroku:deploy'
+                
 
                 //mvn 'heroku:deploy'
                 //sh 'mvn deploy'
